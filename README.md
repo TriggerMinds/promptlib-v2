@@ -12,7 +12,7 @@
 [![No External APIs](https://img.shields.io/badge/No_External_APIs-Self--contained-green)](https://github.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A modern, fully-featured platform for discovering, sharing, and managing AI prompts. Built with React, TypeScript, and Vite.
+A modern demo application for discovering and managing AI prompts locally. Built with React, TypeScript, and Vite.
 
 </div>
 
@@ -26,9 +26,9 @@ A modern, fully-featured platform for discovering, sharing, and managing AI prom
 - **Responsive Design** - Optimized for all device sizes
 
 ### 👥 User Management
-- **Authentication System** - Mock login with user/admin roles
-- **Admin Dashboard** - Full CRUD operations for prompt management
-- **User Profiles** - Role-based access control
+- **Mock Authentication** - Simulated login with user/admin roles (no real backend)
+- **Admin Dashboard** - Create, read, update, delete operations for prompt management
+- **Role-based Access** - Admin vs user permissions
 - **Demo Accounts** - Pre-configured admin and user accounts for testing
 
 ### 🛠️ Technical Features
@@ -36,6 +36,15 @@ A modern, fully-featured platform for discovering, sharing, and managing AI prom
 - **Local Storage** - Persistent data across sessions
 - **Type Safety** - Comprehensive TypeScript definitions
 - **Modern Stack** - React 19, Vite, Tailwind CSS, React Router 7
+
+## ⚠️ Limitations
+This is a **demo application** with the following limitations:
+- **No real backend** – Authentication and data storage are simulated using localStorage
+- **Single-user experience** – Data is stored locally and not shared across devices/users
+- **No real AI integration** – The "AI enhancement" feature is a mock simulation
+- **No user registration** – Only pre‑configured demo accounts are available
+
+If you need a production‑ready platform with real user authentication, cloud database, and AI API integration, consider extending this project with a backend (e.g., Supabase, Firebase) and integrating a real LLM provider.
 
 ## 🚀 Quick Start
 

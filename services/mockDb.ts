@@ -210,6 +210,40 @@ class MockDatabase {
     this.persist();
     return newPrompt;
   }
+
+  async updatePrompt(id: number, data: Partial<Prompt>) {
+    const prompt = this.prompts.find(p => p.id === id);
+    if (!prompt) throw new Error('Prompt not found');
+    
+    // Update fields
+    if (data.title !== undefined) prompt.title = data.title;
+    if (data.description !== undefined) prompt.description = data.description;
+    if (data.prompt_text !== undefined) prompt.prompt_text = data.prompt_text;
+    if (data.system_prompt !== undefined) prompt.system_prompt = data.system_prompt;
+    if (data.user_prompt !== undefined) prompt.user_prompt = data.user_prompt;
+    if (data.prompt_type !== undefined) prompt.prompt_type = data.prompt_type;
+    if (data.category_id !== undefined) prompt.category_id = Number(data.category_id);
+    if (data.tags !== undefined) prompt.tags = data.tags;
+    if (data.is_featured !== undefined) prompt.is_featured = data.is_featured;
+    if (data.is_published !== undefined) prompt.is_published = data.is_published;
+    
+    prompt.updated_at = new Date().toISOString();
+    
+    // Add a version entry
+    if (prompt.versions) {
+      const newVersion = {
+        id: prompt.versions.length + 1,
+        version_number: prompt.versions.length + 1,
+        prompt_text: prompt.prompt_text,
+        change_note: 'Updated via edit',
+        created_at: new Date().toISOString()
+      };
+      prompt.versions.push(newVersion);
+    }
+    
+    this.persist();
+    return prompt;
+  }
 }
 
 export const db = new MockDatabase();

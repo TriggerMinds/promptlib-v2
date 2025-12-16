@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
+import CreatePromptModal from '../components/CreatePromptModal';
 import { useAuth } from '../context/AuthContext';
 import { db } from '../services/mockDb';
 import { Prompt } from '../types';
-import { Trash2, Star, Eye, Loader2 } from 'lucide-react';
+import { Trash2, Star, Eye, Loader2, Edit } from 'lucide-react';
 
 const AdminDashboard: React.FC = () => {
   const { user, isLoading } = useAuth();
   const navigate = useNavigate();
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
 
   useEffect(() => {
     // Wacht tot auth klaar is met laden
@@ -119,22 +122,32 @@ const AdminDashboard: React.FC = () => {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex items-center justify-end gap-2">
-                          <button 
-                            onClick={() => handleToggleFeature(prompt.id)} 
+                          <button
+                            onClick={() => handleToggleFeature(prompt.id)}
                             title={prompt.is_featured ? "Remove from featured" : "Add to featured"}
                             className={`p-1.5 rounded transition-colors ${prompt.is_featured ? 'bg-amber-50 text-amber-500 hover:bg-amber-100' : 'text-slate-400 hover:bg-slate-100'}`}
                           >
                             <Star className={`w-4 h-4 ${prompt.is_featured ? 'fill-current' : ''}`} />
                           </button>
-                          <button 
-                            onClick={() => navigate(`/prompts/${prompt.id}`)} 
+                          <button
+                            onClick={() => {
+                              setSelectedPrompt(prompt);
+                              setIsModalOpen(true);
+                            }}
+                            title="Edit Prompt"
+                            className="p-1.5 rounded hover:bg-slate-100 text-slate-600 transition-colors"
+                          >
+                            <Edit className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => navigate(`/prompts/${prompt.id}`)}
                             title="View Details"
                             className="p-1.5 rounded hover:bg-blue-50 text-blue-600 transition-colors"
                           >
                             <Eye className="w-4 h-4" />
                           </button>
-                          <button 
-                            onClick={() => handleDelete(prompt.id)} 
+                          <button
+                            onClick={() => handleDelete(prompt.id)}
                             title="Delete Prompt"
                             className="p-1.5 rounded hover:bg-red-50 text-red-600 transition-colors"
                           >
@@ -150,6 +163,17 @@ const AdminDashboard: React.FC = () => {
           )}
         </div>
       </div>
+
+      {/* Edit/Create Prompt Modal */}
+      <CreatePromptModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedPrompt(null);
+          loadData();
+        }}
+        prompt={selectedPrompt}
+      />
     </div>
   );
 };

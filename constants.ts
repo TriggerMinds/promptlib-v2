@@ -1,16 +1,19 @@
 import { Prompt, PromptType, Category } from './types';
 
-// Using numeric IDs to match Category interface
+// Using numeric IDs to match Category interface - aligned with mockDb SEED_CATEGORIES
 export const CATEGORIES: Category[] = [
-  { id: 0, name: 'All Prompts', slug: 'all', description: 'All prompts' },
-  { id: -1, name: 'My Favorites', slug: 'favorites', description: 'My Favorites', color: 'bg-amber-100 text-amber-800' },
-  { id: 1, name: 'Academic', slug: 'academic', description: 'Academic', color: 'bg-blue-100 text-blue-800' },
-  { id: 2, name: 'Business Strategy', slug: 'business', description: 'Business Strategy', color: 'bg-emerald-100 text-emerald-800' },
-  { id: 3, name: 'Web Development', slug: 'coding', description: 'Web Development', color: 'bg-slate-100 text-slate-800' },
-  { id: 4, name: 'Creative Writing', slug: 'creative', description: 'Creative Writing', color: 'bg-purple-100 text-purple-800' },
-  { id: 5, name: 'Image Gen', slug: 'image', description: 'Image Gen', color: 'bg-pink-100 text-pink-800' },
-  { id: 6, name: 'Medical/Health', slug: 'health', description: 'Medical/Health', color: 'bg-red-100 text-red-800' },
+  { id: 1, name: 'Academic', slug: 'academic', description: 'Prompts for education', color: 'bg-blue-100 text-blue-800' },
+  { id: 2, name: 'Business', slug: 'business', description: 'Business strategy', color: 'bg-emerald-100 text-emerald-800' },
+  { id: 3, name: 'Coding', slug: 'coding', description: 'Development prompts', color: 'bg-slate-100 text-slate-800' },
+  { id: 4, name: 'Creative', slug: 'creative', description: 'Creative writing', color: 'bg-purple-100 text-purple-800' },
+  { id: 5, name: 'Data Analysis', slug: 'data-analysis', description: 'Data science', color: 'bg-orange-100 text-orange-800' },
+  { id: 6, name: 'Marketing', slug: 'marketing', description: 'Marketing & SEO', color: 'bg-pink-100 text-pink-800' },
+  { id: 7, name: 'AI Agents', slug: 'ai-agents', description: 'Autonomous agents', color: 'bg-indigo-100 text-indigo-800' },
 ];
+
+// Helper to get category by ID
+export const getCategoryById = (id: number): Category | undefined => 
+  CATEGORIES.find(c => c.id === id);
 
 const DEFAULT_DATE = new Date().toISOString();
 

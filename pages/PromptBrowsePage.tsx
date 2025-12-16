@@ -47,7 +47,7 @@ const PromptBrowsePage: React.FC = () => {
       setCategories(cats);
       setPrompts(data.prompts);
     } catch (e) {
-      console.error(e);
+      // Silently handle error (mock environment)
     } finally {
       setLoading(false);
     }

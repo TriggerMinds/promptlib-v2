@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
-import { X, Sparkles, Loader2, Copy } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Sparkles, Loader2 } from 'lucide-react';
 import { enhancePrompt } from '../services/geminiService';
 import { db } from '../services/mockDb';
 import { useAuth } from '../context/AuthContext';
-import { PromptType } from '../types';
+import { PromptType, Prompt } from '../types';
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  prompt?: Prompt | null;
 }
 
-const CreatePromptModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
+const CreatePromptModal: React.FC<ModalProps> = ({ isOpen, onClose, prompt }) => {
   const { user } = useAuth();
   const [isEnhancing, setIsEnhancing] = useState(false);
   
@@ -23,6 +24,26 @@ const CreatePromptModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const [type, setType] = useState<PromptType>(PromptType.TEXT);
   const [tags, setTags] = useState('');
 
+  useEffect(() => {
+    if (prompt) {
+      setTitle(prompt.title);
+      setDescription(prompt.description);
+      setSystemPrompt(prompt.system_prompt || '');
+      setUserPrompt(prompt.user_prompt || '');
+      setCategory(prompt.category_id.toString());
+      setType(prompt.prompt_type);
+      setTags(prompt.tags?.join(', ') || '');
+    } else {
+      setTitle('');
+      setDescription('');
+      setSystemPrompt('');
+      setUserPrompt('');
+      setCategory('1');
+      setType(PromptType.TEXT);
+      setTags('');
+    }
+  }, [prompt]);
+
   if (!isOpen) return null;
 
   const handleEnhance = async () => {
@@ -32,7 +53,7 @@ const CreatePromptModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       const improved = await enhancePrompt(userPrompt);
       setSystemPrompt(improved); // Gemini usually generates system instructions
     } catch (e) {
-      console.error(e);
+      // Silently handle error (mock environment)
     } finally {
       setIsEnhancing(false);
     }
@@ -41,22 +62,32 @@ const CreatePromptModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   const handleSubmit = async () => {
     if (!user) return;
     
-    await db.createPrompt({
-      title,
-      description,
-      system_prompt: systemPrompt,
-      user_prompt: userPrompt,
-      category_id: Number(category),
-      prompt_type: type,
-      tags: tags.split(',').map(t => t.trim()).filter(t => t)
-    }, user);
+    if (prompt) {
+      // Update existing prompt
+      await db.updatePrompt(prompt.id, {
+        title,
+        description,
+        system_prompt: systemPrompt,
+        user_prompt: userPrompt,
+        category_id: Number(category),
+        prompt_type: type,
+        tags: tags.split(',').map(t => t.trim()).filter(t => t)
+      });
+    } else {
+      // Create new prompt
+      await db.createPrompt({
+        title,
+        description,
+        system_prompt: systemPrompt,
+        user_prompt: userPrompt,
+        category_id: Number(category),
+        prompt_type: type,
+        tags: tags.split(',').map(t => t.trim()).filter(t => t)
+      }, user);
+    }
 
     onClose();
-    // Reset form...
-    setTitle('');
-    setDescription('');
-    setSystemPrompt('');
-    setUserPrompt('');
+    // Reset form (will be handled by useEffect when prompt changes)
   };
 
   const handleBackdropClick = (e: React.MouseEvent) => {
@@ -72,8 +103,8 @@ const CreatePromptModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
         {/* Header */}
         <div className="p-6 border-b border-slate-100 flex justify-between items-center sticky top-0 bg-white z-10 rounded-t-2xl">
           <div>
-            <h2 className="text-xl font-bold text-slate-900">Create New Prompt</h2>
-            <p className="text-sm text-slate-500">Share your prompt with the community.</p>
+            <h2 className="text-xl font-bold text-slate-900">{prompt ? 'Edit Prompt' : 'Create New Prompt'}</h2>
+            <p className="text-sm text-slate-500">{prompt ? 'Update your prompt details.' : 'Share your prompt with the community.'}</p>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-slate-100 rounded-full transition-colors">
             <X className="w-5 h-5 text-slate-500" />
