@@ -3,6 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "description": "A modern, fully-featured platform for discovering, sharing, and managing AI prompts.",
+  "license": "MIT",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
