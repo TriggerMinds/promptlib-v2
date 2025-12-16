@@ -56,8 +56,8 @@ const Header: React.FC<HeaderProps> = ({ onCreateClick }) => {
           {/* Desktop Nav */}
           <nav className="hidden md:flex space-x-8">
             <Link to="/" className="text-sm font-medium text-slate-900 dark:text-slate-100 hover:text-primary dark:hover:text-primary transition-colors border-b-2 border-primary pb-0.5">Prompts</Link>
-            <Link to="#" className="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors">Categories</Link>
-            <Link to="#" className="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors">Tags</Link>
+            <Link to="/categories" className="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors">Categories</Link>
+            <Link to="/tags" className="text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-primary dark:hover:text-primary transition-colors">Tags</Link>
             {user?.role === 'admin' && (
               <Link to="/admin" className="text-sm font-medium text-amber-600 hover:text-amber-700 transition-colors flex items-center gap-1">
                 <LayoutDashboard className="w-3 h-3" />
