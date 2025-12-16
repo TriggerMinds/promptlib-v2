@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import PromptCard from '../components/PromptCard';
+import PromptOfTheDay from '../components/PromptOfTheDay';
 import CreatePromptModal from '../components/CreatePromptModal';
 import { Prompt, Category, PromptType } from '../types';
 import { db } from '../services/mockDb';
@@ -60,18 +61,29 @@ const PromptBrowsePage: React.FC = () => {
     }
   };
 
+  // Find a featured prompt for the hero section
+  const featuredPrompt = prompts.find(p => p.is_featured) || prompts[0];
+
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-sans transition-colors duration-300">
       <Header onCreateClick={handleCreateClick} />
 
       <main className="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
+        {/* HERO / PROMPT OF THE DAY */}
+        {!loading && !searchQuery && selectedCategory === 'all' && featuredPrompt && (
+          <PromptOfTheDay 
+            prompt={featuredPrompt} 
+            onClick={(p) => navigate(`/prompts/${p.id}`)} 
+          />
+        )}
+        
         {/* FILTERS BAR */}
         <section className="mb-8 space-y-4">
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
               Explore Prompts
-              <span className="text-sm font-normal text-slate-500 bg-slate-100 px-2 py-1 rounded-full">
+              <span className="text-sm font-normal text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded-full">
                 {prompts.length}
               </span>
             </h1>
@@ -84,14 +96,14 @@ const PromptBrowsePage: React.FC = () => {
                   placeholder="Search prompts..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+                  className="w-full pl-9 pr-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-colors"
                 />
               </div>
 
               <select 
                 value={selectedCategory} 
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+                className="px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none transition-colors"
               >
                 <option value="all">All Categories</option>
                 {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -100,7 +112,7 @@ const PromptBrowsePage: React.FC = () => {
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value as any)}
-                className="px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 outline-none"
+                className="px-3 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-primary/20 outline-none transition-colors"
               >
                 <option value="newest">Newest First</option>
                 <option value="popular">Most Popular</option>
@@ -127,8 +139,8 @@ const PromptBrowsePage: React.FC = () => {
         )}
 
         {!loading && prompts.length === 0 && (
-          <div className="text-center py-20 border-2 border-dashed border-slate-200 rounded-xl">
-             <p className="text-slate-500">No prompts found matching your criteria.</p>
+          <div className="text-center py-20 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
+             <p className="text-slate-500 dark:text-slate-400">No prompts found matching your criteria.</p>
              <button 
                onClick={() => { setSearchQuery(''); setSelectedCategory('all'); }}
                className="mt-2 text-primary font-medium hover:underline"
